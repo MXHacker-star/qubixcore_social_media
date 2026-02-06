@@ -2,6 +2,7 @@ import LoginForm from "@/components/LoginForm";
 import ThemeToggle from "@/components/ThemeToggle";
 
 export default function LoginPage() {
+  const missingEnv = !process.env.DATABASE_URL || !process.env.AUTH_SECRET;
   return (
     <div className="app-shell">
       <div className="relative z-10 mx-auto flex w-full max-w-xl flex-col items-start justify-center gap-8 rounded-[32px] border border-[color:var(--line)] bg-[color:var(--panel)] p-10 shadow-[var(--shadow)]">
@@ -23,6 +24,12 @@ export default function LoginPage() {
         <div className="w-full rounded-2xl border border-[color:var(--line)] bg-[color:var(--paper)] p-4 text-xs text-[color:var(--muted)]">
           Demo access: `admin@qubixcore.com` / `Qubixcore2026!`
         </div>
+
+        {missingEnv ? (
+          <div className="w-full rounded-2xl border border-[color:var(--line)] bg-[color:var(--paper)] p-4 text-xs text-[color:var(--accent-2)]">
+            Missing env vars. Set `DATABASE_URL` and `AUTH_SECRET` in Vercel.
+          </div>
+        ) : null}
 
         <LoginForm />
       </div>

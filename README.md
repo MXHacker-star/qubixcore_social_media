@@ -27,6 +27,12 @@ Copy `.env.example` to `.env` and set:
 
 If using Supabase, use the **Transaction pooler** connection string for `DATABASE_URL`.
 
+## Vercel Deployment Checklist
+
+1. Go to Vercel → Project → Settings → Environment Variables
+2. Add `DATABASE_URL` and `AUTH_SECRET`
+3. Redeploy
+
 ## Scripts
 
 - `npm run db:push` — create/update SQLite schema
