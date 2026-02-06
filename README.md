@@ -25,6 +25,8 @@ Copy `.env.example` to `.env` and set:
 - `DATABASE_URL`
 - `AUTH_SECRET`
 
+If using Supabase, use the **Transaction pooler** connection string for `DATABASE_URL`.
+
 ## Scripts
 
 - `npm run db:push` — create/update SQLite schema
