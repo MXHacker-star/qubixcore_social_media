@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum UserRole {
+  ADMIN
+  TEAM_MEMBER
+}
+
+enum ContentStatus {
+  IDEA
+  DRAFTED
+  SCHEDULED
+  POSTED
+}
+
+enum ApprovalStatus {
+  NEEDS_REVIEW
+  APPROVED
+  CHANGES_REQUESTED
+  BLOCKED
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  role         UserRole      @default(TEAM_MEMBER)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  tasks        WorkflowTask[]
+  contentItems ContentItem[] @relation("ContentOwner")
+}
+
+model Client {
+  id             String          @id @default(cuid())
+  name           String
+  brandColor     String
+  platforms      String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  socialAccounts SocialAccount[]
+  contentItems   ContentItem[]
+  ideas          Idea[]
+}
+
+model SocialAccount {
+  id           String   @id @default(cuid())
+  platformName String
+  pageName     String
+  pageUrl      String
+  status       String
+  clientId     String
+  client       Client   @relation(fields: [clientId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ContentItem {
+  id          String        @id @default(cuid())
+  date        DateTime
+  platform    String
+  postType    String
+  caption     String
+  hashtags    String
+  status      ContentStatus @default(IDEA)
+  clientId    String
+  client      Client        @relation(fields: [clientId], references: [id])
+  ownerId     String?
+  owner       User?         @relation("ContentOwner", fields: [ownerId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Idea {
+  id                String   @id @default(cuid())
+  title             String
+  description       String
+  suggestedPlatform String
+  priority          String
+  clientId          String
+  client            Client   @relation(fields: [clientId], references: [id])
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model WorkflowTask {
+  id             String         @id @default(cuid())
+  title          String
+  notes          String
+  approvalStatus ApprovalStatus @default(NEEDS_REVIEW)
+  assigneeId     String
+  assignee       User           @relation(fields: [assigneeId], references: [id])
+  dueDate        DateTime
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
