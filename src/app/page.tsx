@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { safeVerifySessionToken } from "@/lib/auth";
 
 export default async function Home() {
-  const token = cookies().get("qc_session")?.value;
+  const token = (await cookies()).get("qc_session")?.value;
   const session = await safeVerifySessionToken(token);
   redirect(session ? "/dashboard" : "/login");
 }
